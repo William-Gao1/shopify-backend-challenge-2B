@@ -1,0 +1,6 @@
+{
+  "pg": {
+    "driver": "pg",
+    "schema": "inventory"
+  }
+}
