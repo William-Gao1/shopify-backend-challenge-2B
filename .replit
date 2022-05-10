@@ -1,2 +1,2 @@
 language = "bash"
-run = "node src/index.js"
+run = "npm run dev"
