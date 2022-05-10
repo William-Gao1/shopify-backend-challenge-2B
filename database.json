@@ -1,5 +1,5 @@
 {
-  "pg": {
+  "dev": {
     "driver": "pg",
     "schema": "inventory"
   }
