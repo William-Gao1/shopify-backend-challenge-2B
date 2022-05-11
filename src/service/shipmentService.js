@@ -21,13 +21,13 @@ const getShipmentById = async (id) => {
 const consolidateShipment = (items) => {
   const consolidatedItems = new Map();
   items.forEach(item => {
-    if (!item.id || !item.quantity) {
+    if (!item.itemId || !item.quantity) {
       throw {status: ResponseCode.BAD_REQUEST, message: "Please provide the required fields for each item"};
     }
-    if (consolidatedItems.get(item.id)) {
-      consolidatedItems.set(item.id, item.quantity + consolidatedItems.get(item.id));
+    if (consolidatedItems.get(item.itemId)) {
+      consolidatedItems.set(item.itemId, item.quantity + consolidatedItems.get(item.itemId));
     } else {
-      consolidatedItems.set(item.id, item.quantity);
+      consolidatedItems.set(item.itemId, item.quantity);
     }
   })
   return consolidatedItems;
@@ -50,7 +50,7 @@ const addItemToShipment = async (id, itemId, quantity, t) => {
   const inventoryItem = await inventoryService.getItemById(itemId, t);
 
   if (inventoryItem.stock < quantity) {
-    throw {status: ResponseCode.BAD_REQUEST, message: `Not enough stock for inventory item with id ${shipmentItem.id}`}
+    throw {status: ResponseCode.BAD_REQUEST, message: `Not enough stock for inventory item with id ${itemId}`}
   }
   
   const existingShipmentItem = await (t || db).oneOrNone(getShipmentItemByItemIdQuery, [id, itemId]);
