@@ -1,0 +1,339 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a simple e-commerce API for the 2022 Fall Shopify Intern Backend Developer Challenge",
+    "version": "1.0.0",
+    "title": "Swagger Fall 2022 - Shopify Developer Intern Challenge",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "william2010.gao@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "shopify-backend-challenge-2B.williamgao123.repl.co",
+  "tags": [
+    {
+      "name": "inventory",
+      "description": "Endpoints for managing inventory items"
+    },
+    {
+      "name": "shipment",
+      "description": "Endpoints for managing shipments"
+    }
+  ],
+  "paths": {
+    "/v1/inventory": {
+      "get": {
+        "tags": [
+          "inventory"
+        ],
+        "summary": "Get list of all items in store",
+        "operationId": "getAllItems",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Item"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "inventory"
+        ],
+        "summary": "Add a new item to the store",
+        "description": "",
+        "operationId": "addItem",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Item object that needs to be added to the store",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Item created"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/v1/inventory/{itemId}": {
+      "put": {
+        "tags": [
+          "inventory"
+        ],
+        "summary": "Update an existing item",
+        "description": "",
+        "operationId": "updateItem",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "itemId",
+            "type": "integer",
+            "required": true,
+            "description": "Id of item to update"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Item object that represents updated item",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item updated"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "inventory"
+        ],
+        "summary": "Deletes an item",
+        "description": "Will also delete all related items in all shipments",
+        "operationId": "deleteItem",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "itemId",
+            "type": "integer",
+            "required": true,
+            "description": "Id of item to delete"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Item deleted"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          }
+        }
+      }
+    },
+    "/v1/shipment/{shipmentId}": {
+      "get": {
+        "tags": [
+          "shipment"
+        ],
+        "summary": "Gets a shipment by id",
+        "description": "",
+        "operationId": "getShipmentById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "type": "integer",
+            "required": true,
+            "description": "Id of shipment to get"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Shipment"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/shipment": {
+      "post": {
+        "tags": [
+          "shipment"
+        ],
+        "summary": "Creates a new shipment",
+        "description": "",
+        "operationId": "createShipment",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Shipment to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Shipment"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Shipment created"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/v1/shipment/addItems/{shipmentId}": {
+      "post": {
+        "tags": [
+          "shipment"
+        ],
+        "summary": "Adds items to shipment",
+        "description": "",
+        "operationId": "addAllItemsToShipment",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "type": "integer",
+            "required": true,
+            "description": "Id of shipment to modify"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Items to add",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/ShipmentItem"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Shipment updated"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Item": {
+      "type": "object",
+      "required": [
+        "name",
+        "price"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string",
+          "example": "Bose Bluetooth Headphones"
+        },
+        "stock": {
+          "type": "integer",
+          "default": 0
+        },
+        "description": {
+          "type": "string",
+          "default": "''",
+          "example": "Active noise cancelling headphones"
+        },
+        "price": {
+          "type": "number",
+          "format": "float",
+          "example": 249.99
+        }
+      }
+    },
+    "Shipment": {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ShipmentItem"
+          }
+        }
+      }
+    },
+    "ShipmentItem": {
+      "type": "object",
+      "required": [
+        "itemId",
+        "quantity"
+      ],
+      "properties": {
+        "itemId": {
+          "type": "integer",
+          "example": 2
+        },
+        "quantity": {
+          "type": "integer",
+          "example": 10
+        }
+      }
+    }
+  }
+}
