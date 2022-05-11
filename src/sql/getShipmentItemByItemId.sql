@@ -1,0 +1,1 @@
+SELECT * FROM shipment_item WHERE shipment_id = $1 AND item_id = $2;
