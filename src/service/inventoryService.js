@@ -28,19 +28,16 @@ const createItem = async (name, price, description = '', stock = 0) => {
 
 
 
-const updateItem = async (id, name, price, description = '', stock = 0) => {
+const updateItem = async (id, name, price, description = '', stock = 0, t) => {
   if (!id) {
     throw {status: ResponseCode.BAD_REQUEST, message: "Please provide an id"};
   } else if (!name || !price) {
     throw {status: ResponseCode.BAD_REQUEST, message: "Please provide all required fields"};
   }
 
-  const item = await db.oneOrNone(getItemByIdQuery, [id]);
-  if (!item) {
-    throw {status: ResponseCode.BAD_REQUEST, message: `No such item with id ${id} found`};
-  }
+  const item = await getItemById(id);
 
-  return await db.one(saveItemQuery, [id, name, price, description, stock]);
+  return await (t || db).one(saveItemQuery, [id, name, price, description, stock]);
 }
 
 
@@ -50,13 +47,17 @@ const deleteItem = async (id) => {
     throw {status: ResponseCode.BAD_REQUEST, message: "Please provide an id"};
   }
   
-  const item = await db.oneOrNone(getItemByIdQuery, [id]);
-  
+  const item = await getItemById(id);
+
+  return await db.one(deleteItemQuery, [id]);
+}
+
+const getItemById = async (id, t) => {
+  const item = await (t || db).oneOrNone(getItemByIdQuery, [id]);
   if (!item) {
     throw {status: ResponseCode.BAD_REQUEST, message: `No such item with id ${id} found`};
   }
-
-  return await db.one(deleteItemQuery, [id]);
+  return item;
 }
 
 
@@ -65,5 +66,6 @@ module.exports = {
   getAllItems,
   createItem,
   updateItem,
-  deleteItem
+  deleteItem,
+  getItemById
 }

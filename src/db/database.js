@@ -4,7 +4,7 @@ const pgp = require("pg-promise")(config);
 
 const cn = {
   connectionString: process.env.DATABASE_URL,
-  max: 5
+  max: 10
 };
 
 const db = pgp(cn);

@@ -1,0 +1,1 @@
+SELECT * FROM shipment WHERE id = $1;

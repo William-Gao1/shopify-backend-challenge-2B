@@ -1,0 +1,1 @@
+ALTER TABLE shipment_item ADD COLUMN shipment_item_id SERIAL PRIMARY KEY;
